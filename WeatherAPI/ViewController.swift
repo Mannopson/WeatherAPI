@@ -6,12 +6,21 @@
 //
 
 import UIKit
+import CoreLocation
 
 class ViewController: UIViewController {
+    
+    @IBOutlet weak var iconImageView: UIImageView!
+    @IBOutlet weak var cityNameLabel: UILabel!
+    @IBOutlet weak var degreeLabel: UILabel!
+    
+    
+    let locationManager = CLLocationManager.init()
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView.init(style: .large)
         activityIndicator.color = UIColor.white
+        activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
         return activityIndicator
     }()
@@ -21,6 +30,19 @@ class ViewController: UIViewController {
         activityView.backgroundColor = UIColor.systemTeal
         return activityView
     }()
+    
+    private func locationServices() {
+        /* Set the delegate */
+        locationManager.delegate = self
+        
+        /* Check service status */
+        switch locationManager.authorizationStatus {
+        case .authorizedWhenInUse: locationManager.requestLocation()
+        case .notDetermined: locationManager.requestWhenInUseAuthorization()
+        case .denied, .restricted: self.error(title: "Access Denied")
+        default: break
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +50,45 @@ class ViewController: UIViewController {
         view.addSubview(activityView)
         activityIndicator.center = activityView.center
         activityView.addSubview(activityIndicator)
+        
+        degreeLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        cityNameLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+        
+        locationServices()
+    }
+}
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last?.coordinate {
+            WeatherModel.shared.getConditionInfoByLocation(latitude: location.latitude, longitude: location.longitude, units: "imperial", language: "en") { [weak self] (result) in
+                switch result {
+                case .success(let data):
+                    print(data.main.pressure)
+                    DispatchQueue.main.async {
+                        self?.activityView.removeFromSuperview()
+                        self?.activityIndicator.stopAnimating()
+                        
+                        self?.iconImageView.image = WeatherModel.shared.getSystemIcon(from: data.weather.last!.icon)
+                        self?.cityNameLabel.text = data.name
+                        self?.degreeLabel.text = Int.init(data.main.temp).description
+                    }
+                case .failure(let error): print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        self.error(title: error.localizedDescription)
+    }
+}
+
+extension ViewController {
+    private func error(title: String) {
+        let alertController = UIAlertController.init(title: title, message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction.init(title: "Ok", style: .cancel, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 
