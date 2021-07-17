@@ -65,9 +65,17 @@
 				E245EBB426A283D300683297 /* Assets.xcassets */,
 				E245EBB626A283D300683297 /* LaunchScreen.storyboard */,
 				E245EBB926A283D300683297 /* Info.plist */,
-				E245EBB126A283D200683297 /* WeatherAPI.xcdatamodeld */,
+				E245EBBF26A2841500683297 /* Model */,
 			);
 			path = WeatherAPI;
+			sourceTree = "<group>";
+		};
+		E245EBBF26A2841500683297 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E245EBB126A283D200683297 /* WeatherAPI.xcdatamodeld */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
