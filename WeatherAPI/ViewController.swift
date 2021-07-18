@@ -101,6 +101,6 @@ extension ViewController {
 extension ViewController {
     private func unitsButton() -> UIBarButtonItem {
         // An error occured while commiting the changes
-        return UIBarButtonItem.init()
+        return UIBarButtonItem.init(title: "℃", style: .done, target: self, action: nil)
     }
 }
