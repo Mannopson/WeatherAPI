@@ -14,20 +14,20 @@ class ViewController: UIViewController {
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var degreeLabel: UILabel!
     
-    
     let locationManager = CLLocationManager.init()
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView.init(style: .large)
-        activityIndicator.color = UIColor.white
+        activityIndicator.color = UIColor.systemTeal
         activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
         return activityIndicator
     }()
     
     lazy var activityView: UIView = {
-        let activityView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height))
-        activityView.backgroundColor = UIColor.systemTeal
+        let screen = UIScreen.main
+        let activityView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: screen.bounds.width, height: screen.bounds.height))
+        activityView.backgroundColor = UIColor.systemBackground
         return activityView
     }()
     
@@ -54,6 +54,10 @@ class ViewController: UIViewController {
         degreeLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
         cityNameLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = false
+        
         locationServices()
     }
 }
@@ -64,7 +68,6 @@ extension ViewController: CLLocationManagerDelegate {
             WeatherModel.shared.getConditionInfoByLocation(latitude: location.latitude, longitude: location.longitude, units: "imperial", language: "en") { [weak self] (result) in
                 switch result {
                 case .success(let data):
-                    print(data.main.pressure)
                     DispatchQueue.main.async {
                         self?.activityView.removeFromSuperview()
                         self?.activityIndicator.stopAnimating()
@@ -73,7 +76,10 @@ extension ViewController: CLLocationManagerDelegate {
                         self?.cityNameLabel.text = data.name
                         self?.degreeLabel.text = Int.init(data.main.temp).description
                     }
-                case .failure(let error): print(error.localizedDescription)
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        self?.error(title: error.localizedDescription)
+                    }
                 }
             }
         }
