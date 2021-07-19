@@ -37,6 +37,11 @@ public struct ResponseError: Decodable, LocalizedError {
     }
 }
 
+private enum Units: String {
+    case imperial = "imperial"
+    case metric = "metric"
+}
+
 class WeatherModel {
     static let shared = WeatherModel.init()
     
@@ -65,6 +70,17 @@ class WeatherModel {
         default: break
         }
         return nil
+    }
+    
+    public func preferredUnits() -> String {
+        if let userDefaults = UserDefaults.standard.object(forKey: "temperature_scales") as? Int {
+            switch userDefaults {
+            case 0: return Units.metric.rawValue
+            case 1: return Units.imperial.rawValue
+            default: return Units.metric.rawValue
+            }
+        }
+        return Units.metric.rawValue
     }
     
     public func getConditionInfoByLocation(latitude: Double,

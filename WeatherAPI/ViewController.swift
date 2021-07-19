@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var degreeLabel: UILabel!
     
     let locationManager = CLLocationManager.init()
+    let weatherModel = WeatherModel.shared
     
     lazy var activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView.init(style: .large)
@@ -47,6 +48,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
         view.addSubview(activityView)
         activityIndicator.center = activityView.center
         activityView.addSubview(activityIndicator)
@@ -58,6 +60,8 @@ class ViewController: UIViewController {
         navigationController?.navigationBar.shadowImage = UIImage()
         navigationController?.navigationBar.isTranslucent = false
         
+        navigationItem.rightBarButtonItem = unitsButton()
+        
         locationServices()
     }
 }
@@ -65,14 +69,14 @@ class ViewController: UIViewController {
 extension ViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last?.coordinate {
-            WeatherModel.shared.getConditionInfoByLocation(latitude: location.latitude, longitude: location.longitude, units: "imperial", language: "en") { [weak self] (result) in
+            weatherModel.getConditionInfoByLocation(latitude: location.latitude, longitude: location.longitude, units: weatherModel.preferredUnits(), language: "en") { [weak self] (result) in
                 switch result {
                 case .success(let data):
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
                         self?.activityView.removeFromSuperview()
                         self?.activityIndicator.stopAnimating()
                         
-                        self?.iconImageView.image = WeatherModel.shared.getSystemIcon(from: data.weather.last!.icon)
+                        self?.iconImageView.image = self?.weatherModel.getSystemIcon(from: data.weather.last!.icon)
                         self?.cityNameLabel.text = data.name
                         self?.degreeLabel.text = Int.init(data.main.temp).description
                     }
@@ -87,21 +91,5 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.error(title: error.localizedDescription)
-    }
-}
-
-extension ViewController {
-    private func error(title: String) {
-        let alertController = UIAlertController.init(title: title, message: nil, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction.init(title: "Ok", style: .cancel, handler: nil))
-        self.present(alertController, animated: true, completion: nil)
-    }
-}
-
-extension ViewController {
-    private func unitsButton() -> UIBarButtonItem {
-        // An error occured while commiting the changes
-        // What the heck?
-        return UIBarButtonItem.init(title: "℃", style: .done, target: self, action: nil)
     }
 }
