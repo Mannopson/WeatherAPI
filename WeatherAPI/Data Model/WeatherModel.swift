@@ -45,6 +45,12 @@ private enum Units: String {
 class WeatherModel {
     static let shared = WeatherModel.init()
     
+    public func snapshot() -> WeatherCondition {
+        let weather = Weather.init(id: 1, main: "Sun", description: "Clear sky", icon: "10d")
+        let main = Main.init(temp: 25, feels_like: 25.5, temp_min: 18.8, temp_max: 26.5, pressure: 5, humidity: 4)
+        return WeatherCondition.init(weather: [weather], main: main, name: "Earth")
+    }
+    
     public func getSystemIcon(from string: String) -> UIImage? {
         switch string {
         /* Day */
