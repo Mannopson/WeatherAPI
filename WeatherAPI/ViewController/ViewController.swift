@@ -72,13 +72,13 @@ extension ViewController: CLLocationManagerDelegate {
             weatherModel.getConditionInfoByLocation(latitude: location.latitude, longitude: location.longitude, units: weatherModel.preferredUnits(), language: "en") { [weak self] (result) in
                 switch result {
                 case .success(let data):
-                    DispatchQueue.main.async { [weak self] in
+                    DispatchQueue.main.async {
                         self?.activityView.removeFromSuperview()
                         self?.activityIndicator.stopAnimating()
                         
                         self?.iconImageView.image = self?.weatherModel.getSystemIcon(from: data.weather.last!.icon)
                         self?.cityNameLabel.text = data.name
-                        self?.degreeLabel.text = Int.init(data.main.temp).description
+                        self?.degreeLabel.text = Int.init(data.main.temp).description + "" + "º"
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {

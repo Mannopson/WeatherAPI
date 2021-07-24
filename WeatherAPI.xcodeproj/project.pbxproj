@@ -64,9 +64,8 @@
 			children = (
 				E245EBA826A283D200683297 /* AppDelegate.swift */,
 				E245EBAA26A283D200683297 /* SceneDelegate.swift */,
-				E20D0BC026A305230057EA15 /* WeatherModel.swift */,
-				E245EBAC26A283D200683297 /* ViewController.swift */,
-				E2E69C9226A546250053AFDD /* ViewControllerHelper.swift */,
+				E28B28F526A56695007508F0 /* Data Model */,
+				E28B28F426A56672007508F0 /* ViewController */,
 				E245EBAE26A283D200683297 /* Main.storyboard */,
 				E245EBB426A283D300683297 /* Assets.xcassets */,
 				E245EBB626A283D300683297 /* LaunchScreen.storyboard */,
@@ -82,6 +81,23 @@
 				E245EBB126A283D200683297 /* WeatherAPI.xcdatamodeld */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		E28B28F426A56672007508F0 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E245EBAC26A283D200683297 /* ViewController.swift */,
+				E2E69C9226A546250053AFDD /* ViewControllerHelper.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		E28B28F526A56695007508F0 /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				E20D0BC026A305230057EA15 /* WeatherModel.swift */,
+			);
+			path = "Data Model";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
