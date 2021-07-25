@@ -14,6 +14,7 @@ class AppGroups {
         if let userDefaults = UserDefaults.init(suiteName: "group.com.mannopson.weather_api") {
             userDefaults.removeObject(forKey: "temperature_scales")
             userDefaults.set(preferredTemp, forKey: "temperature_scales")
+            print(preferredTemp)
         }
     }
 }

@@ -51,6 +51,13 @@ class WeatherModel {
         return WeatherCondition.init(weather: [weather], main: main, name: "Earth")
     }
     
+    /*
+     The API provider api.openweathermap.org website can be a provider of the icons too.
+     */
+    public func getAPIprovidedIcon(from string: String) -> UIImage? {
+        return nil
+    }
+    
     public func getSystemIcon(from string: String) -> UIImage? {
         switch string {
         /* Day */
