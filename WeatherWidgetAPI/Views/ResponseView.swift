@@ -31,24 +31,20 @@ struct ResponseView: View {
                 VStack(alignment: .center) {
                     if let text = response.weather.last?.description {
                         Text(text)
-                            .font(.caption)
-                            .foregroundColor(Color(UIColor.systemGray))
+                            .font(.footnote)
+                            .foregroundColor(Color(UIColor.white))
                             .multilineTextAlignment(.center)
                             
                     }
                     Text(response.name)
-                        .foregroundColor(Color(UIColor.systemTeal))
-                        .font(.footnote)
+                        .foregroundColor(Color(UIColor.white))
+                        .font(.body)
                         .multilineTextAlignment(.center)
                 }
                 .padding()
             }
+            .background(Color(.systemTeal))
         }
-//        .background(Image("rain")
-//                        .resizable()
-//                        .blur(radius: 15)
-//                        .scaledToFill()
-//                        .edgesIgnoringSafeArea(.all))
     }
 }
 

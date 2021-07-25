@@ -16,16 +16,14 @@ extension ViewController {
     }
     
     private func unitsMenu() -> UIMenu {
-        let userDefaults = UserDefaults.standard
+        let appGroups = AppGroups.shared
         let celsius = UIAction.init(title: "Celsius (°C)", image: nil) { _ in
-            userDefaults.removeObject(forKey: "temperature_scales")
-            userDefaults.set(0, forKey: "temperature_scales")
+            appGroups.userDefaults(preferredTemp: 0)
             self.navigationItem.rightBarButtonItem?.title = "°C"
             self.locationManager.requestLocation()
         }
         let fahrenheit = UIAction.init(title: "Fahrenheit (°F)", image: nil) { _ in
-            userDefaults.removeObject(forKey: "temperature_scales")
-            userDefaults.set(1, forKey: "temperature_scales")
+            appGroups.userDefaults(preferredTemp: 1)
             self.navigationItem.rightBarButtonItem?.title = "°F"
             self.locationManager.requestLocation()
         }
@@ -33,8 +31,9 @@ extension ViewController {
     }
     
     private func preferredTemperatureScale() -> String {
-        if let userDefaults = UserDefaults.standard.object(forKey: "temperature_scales") as? Int {
-            switch userDefaults {
+        if let userDefaults = UserDefaults.init(suiteName: "group.com.mannopson.weather_api"),
+           let temperature_scales = userDefaults.object(forKey: "temperature_scales") as? Int {
+            switch temperature_scales {
             case 0: return "°C"
             case 1: return "°F"
             default: return "°C"

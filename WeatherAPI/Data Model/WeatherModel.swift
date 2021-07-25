@@ -79,8 +79,9 @@ class WeatherModel {
     }
     
     public func preferredUnits() -> String {
-        if let userDefaults = UserDefaults.standard.object(forKey: "temperature_scales") as? Int {
-            switch userDefaults {
+        if let userDefaults = UserDefaults.init(suiteName: "group.com.mannopson.weather_api"),
+           let temperature_scales = userDefaults.object(forKey: "temperature_scales") as? Int {
+            switch temperature_scales {
             case 0: return Units.metric.rawValue
             case 1: return Units.imperial.rawValue
             default: return Units.metric.rawValue
