@@ -31,19 +31,6 @@ class ViewController: UIViewController {
         activityView.backgroundColor = UIColor.systemBackground
         return activityView
     }()
-    
-    private func locationServices() {
-        /* Set the delegate */
-        locationManager.delegate = self
-        
-        /* Check service status */
-        switch locationManager.authorizationStatus {
-        case .authorizedWhenInUse: locationManager.requestLocation()
-        case .notDetermined: locationManager.requestWhenInUseAuthorization()
-        case .denied, .restricted: self.error(title: "Access Denied")
-        default: break
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,7 +56,10 @@ class ViewController: UIViewController {
         
         navigationItem.rightBarButtonItem = unitsButton()
         
-        locationServices()
+        locationManager.delegate = self
+        if locationManager.authorizationStatus == .notDetermined {
+            locationManager.requestWhenInUseAuthorization()
+        }
     }
 }
 
@@ -98,5 +88,14 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         self.error(title: error.localizedDescription)
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse: locationManager.requestLocation()
+        case .denied, .restricted: self.error(title: "Access Denied")
+        case .notDetermined: locationManager.requestWhenInUseAuthorization()
+        default: break
+        }
     }
 }
